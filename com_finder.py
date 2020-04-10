@@ -3,9 +3,9 @@ from datetime import datetime, timedelta, time
 import plotly.graph_objects as go
 
 
-def get_response_in_json():
-    list_total_comms_per_day = []
-    date_time = convert_datetime_to_timestamp()
+def get_number_of_comments_by_day():
+    total_comms_per_day = []
+    date_time = get_time_intervals_for_last_7_days()
     day = 0   # first day of the week
     while day != len(date_time):
         num_comments_per_page = 200
@@ -29,26 +29,26 @@ def get_response_in_json():
             page_offset += num_comments_per_page
 
         day += 1
-        list_total_comms_per_day.append(total_number_of_comments)
-    return list_total_comms_per_day
+        total_comms_per_day.append(total_number_of_comments)
+    return total_comms_per_day
 
 
-def convert_datetime_to_timestamp():
-    date_list = []
+def get_time_intervals_for_last_7_days():
+    last_seven_days = []
     midnight_time = time(hour=0, minute=0)
     the_day = (datetime.now().date())
 
     day = 1
     while day != 8:
         day_before = (datetime.now() - timedelta(days=day)).date()
-        list_with_dates = [
+        dates = [
             (datetime.combine(the_day, midnight_time)).timestamp(),
             (datetime.combine(day_before, midnight_time)).timestamp()
         ]
         the_day = day_before
-        date_list.append(list_with_dates)
+        last_seven_days.append(dates)
         day += 1
-    return date_list
+    return last_seven_days
 
 
 def create_graphic(total_comments_everyday):
@@ -66,5 +66,5 @@ def create_graphic(total_comments_everyday):
 
 
 if __name__ == '__main__':
-    everyday_comments_value = get_response_in_json()
+    everyday_comments_value = get_number_of_comments_by_day()
     create_graphic(everyday_comments_value).show()
