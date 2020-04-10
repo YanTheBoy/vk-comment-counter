@@ -8,28 +8,23 @@ def get_number_of_comments_by_day():
     date_time = get_time_intervals_for_last_7_days()
     day = 0   # first day of the week
     while day != len(date_time):
-        num_comments_per_page = 200
-        total_number_of_comments = 0
         page_offset = 0
-        while num_comments_per_page == 200:
-            url = 'https://api.vk.com/method/'
-            params = {
-                'access_token': '8906a95d8906a95d8906a95d62896dcd4d889068906a95dd411d85760beadc00db1139d',
-                'v': '5.103',
-                'q': 'Coca-cola',
-                'start_time': date_time[day][1],
-                'end_time': date_time[day][0],
-                'count': 200,
-                'start_from': page_offset
-            }
-            method = 'newsfeed.search'
-            response = requests.get(url+method, params=params).json()
-            num_comments_per_page = len(response['response']['items'])
-            total_number_of_comments += num_comments_per_page
-            page_offset += num_comments_per_page
-
+        url = 'https://api.vk.com/method/'
+        params = {
+            'access_token': '8906a95d8906a95d8906a95d62896dcd4d889068906a95dd411d85760beadc00db1139d',
+            'v': '5.103',
+            'q': 'Coca-cola',
+            'start_time': date_time[day][1],
+            'end_time': date_time[day][0],
+            'count': 200,
+            'start_from': page_offset
+        }
+        method = 'newsfeed.search'
+        response = requests.get(url+method, params=params).json()
+        num_comments_per_day = response['response']['total_count']
+        page_offset += num_comments_per_day
+        total_comms_per_day.append(num_comments_per_day)
         day += 1
-        total_comms_per_day.append(total_number_of_comments)
     return total_comms_per_day
 
 
